@@ -45,6 +45,8 @@ if loadConfig(args.config):
   session = boto3.Session(profile_name = config["AWSProfileName"])
   client = session.client("route53")
 
+  myip = getMyIp()
+
   zonesList = client.list_hosted_zones()
   zones = {}
   for zone in zonesList["HostedZones"]:
@@ -53,7 +55,6 @@ if loadConfig(args.config):
     zones[zoneName] = zoneValue
 
   if len(config["zones"]) > 0:
-    myip = getMyIp()
     for zone in config["zones"]:
       if zone["zone"] in zones:
         changes = []
@@ -76,7 +77,7 @@ if loadConfig(args.config):
           )
           print "Updated zone {0} A records using IP {1} for records: {2}." . format(zone["zone"], myip, ', '.join(zone["hostnames"]))
         except ClientError as e:
-          print "Could not update zone: {0}" . format(zone["zone"])
+          print "Could not update zone: {0}." . format(zone["zone"])
           print e
       else:
         print "Could not find zone {0} in Route53".format(zone["zone"])
