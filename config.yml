@@ -2,8 +2,8 @@ AWSProfileName: dyndns
 TTL: 60
 IPSource: https://checkip.amazonaws.com/
 zones:
-  - zone: sloth.fi
-    zoneId: Z20T10POESOPV5
+  - zone: example.com
+    zoneId: exampleId
     hostnames:
-      - testing.sloth.fi
-      - hevonen.sloth.fi
+      - example.com
+      - www.example.com
