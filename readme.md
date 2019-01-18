@@ -1,4 +1,4 @@
-# Hostname updater for AWS Route53
+# Hostname A Record (IP) Updater for AWS Route53
 
 This simple python script can be used to update Route53 A record sets automatically. It supports multiple zones.
 
