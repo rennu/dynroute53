@@ -3,7 +3,10 @@ TTL: 60
 IPSource: https://checkip.amazonaws.com/
 zones:
   - zone: example.com
-    zoneId: exampleId
     hostnames:
       - example.com
       - www.example.com
+  - zone: example2.com
+    hostnames:
+      - example2.com
+      - somehost.example2.com
