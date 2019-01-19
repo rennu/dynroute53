@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
-import boto3, yaml, os, argparse, urllib2, sys, socket
+import boto3, yaml, os, argparse, urllib2, sys, socket, logging
 from botocore.exceptions import ClientError
+
+logging.basicConfig(format='%(message)s')
 
 def createParser():
   parser = argparse.ArgumentParser(description = "Dynamic DNS Client for Route 53")
@@ -21,10 +23,10 @@ def loadConfig(path):
       fp.close()
       return config
     except:
-      print "Could not read or parse config."
+      logging.error("Could not read or parse config.")
       sys.exit(1)
   else:
-    print "Could not find config file."
+    logging.error("Could not find config file.")
     sys.exit(1)
 
 def getMyIp():
@@ -33,15 +35,15 @@ def getMyIp():
     socket.inet_aton(ip)
     return ip
   except:
-    print "Could not get IP from {0} or failed to parse result.".format(config["IPSource"])
+    logging.error(("Could not get IP from {0} or failed to parse result.".format(config["IPSource"])))
     sys.exit(1)
 
 def getZones(client):
   try:
     zonesList = client.list_hosted_zones()
   except ClientError as e:
-    print "Could not list zones"
-    print e
+    logging.error("Could not list zones")
+    logging.error(e)
   zones = {}
   for zone in zonesList["HostedZones"]:
     zoneName = zone["Name"][0:len(zone["Name"]) - 1].lower()
@@ -87,13 +89,13 @@ if len(config["zones"]) > 0:
             HostedZoneId = zones[zone["zone"].lower()],
             ChangeBatch = { "Changes": changes }
           )
-          print "Updated zone {0} A records for {1} using IP {2}." . format(zone["zone"], ', '.join(map(lambda c: c["ResourceRecordSet"]["Name"], changes)), myip)
+          print("Updated zone {0} A records for {1} using IP {2}." . format(zone["zone"], ', '.join(map(lambda c: c["ResourceRecordSet"]["Name"], changes)), myip))
         except ClientError as e:
-          print "Could not update zone: {0}." . format(zone["zone"])
-          print e
+          logging.error("Could not update zone: {0}." . format(zone["zone"])) 
+          logging.error(e)
       else:
-        print "No changes detected."
+        print("No changes detected.")
     else:
-      print "Could not find zone {0} in Route53.".format(zone["zone"])
+      logging.error("Could not find zone {0} in Route53.".format(zone["zone"]))
 else:
-  print "Could not find any zone definitions."
+  logging.error("Could not find any zone definitions.")
