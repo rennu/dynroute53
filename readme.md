@@ -2,6 +2,8 @@
 
 This simple python script can be used to update Route53 A record sets automatically. It supports multiple zones.
 
+For python 3 compatible version, see python3 branch.
+
 ## Installation
 
 1. Create a new IAM user that is able to edit Route53 zones (The user has AmazonRoute53FullAccess permission)
