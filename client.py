@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import boto3, yaml, os, argparse, urllib2, sys, socket, logging
+import boto3, yaml, os, argparse, urllib, sys, socket, logging
 from botocore.exceptions import ClientError
 
 logging.basicConfig(format='%(message)s')
@@ -18,9 +18,8 @@ def loadConfig(path):
   global config
   if os.path.exists(path):
     try:
-      fp = open(path, "r")
-      config = yaml.load(fp)
-      fp.close()
+      with open(path, "r") as file:
+        config = yaml.load(file, Loader = yaml.FullLoader)
       return config
     except:
       logging.error("Could not read or parse config.")
@@ -31,7 +30,7 @@ def loadConfig(path):
 
 def getMyIp():
   try:
-    ip = urllib2.urlopen(config["IPSource"]).read().strip()
+    ip = urllib.request.urlopen(config["IPSource"]).read().decode('utf-8').strip()
     socket.inet_aton(ip)
     return ip
   except:
